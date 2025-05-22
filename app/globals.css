@@ -1,0 +1,266 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --rich-black: 18 18 18;
+  --dark-gray: 30 30 30;
+  --white: 255 255 255;
+  --gray-light: 224 224 224;
+  --burgundy: 125 46 70;
+  --gold: 212 175 55;
+}
+
+body {
+  @apply bg-rich-black text-white;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-league-spartan font-light tracking-wide;
+  }
+  p,
+  span,
+  a,
+  button,
+  input,
+  textarea,
+  select {
+    @apply font-lato;
+  }
+}
+
+/* Estilos personalizados para la navegación */
+.nav-link {
+  @apply text-white hover:text-gold transition-all duration-300 text-sm tracking-widest font-light uppercase relative;
+  letter-spacing: 0.2em;
+}
+
+.nav-link::after {
+  content: "";
+  @apply absolute left-0 bottom-0 w-0 h-px bg-gold transition-all duration-300;
+}
+
+.nav-link:hover::after {
+  @apply w-full;
+}
+
+/* Añadir estilos adicionales para el estado activo de los enlaces de navegación */
+/* Añadir esto después de la clase .nav-link:hover::after */
+
+.nav-link.active::after {
+  width: 100%;
+}
+
+.nav-link.active {
+  color: rgb(212, 175, 55);
+}
+
+.nav-button {
+  @apply text-white transition-all duration-300 text-sm tracking-widest font-light uppercase relative;
+  letter-spacing: 0.2em;
+  border: 1px solid rgba(212, 175, 55, 0.5);
+}
+
+.nav-button:hover {
+  @apply bg-transparent;
+  border-color: rgb(212, 175, 55);
+}
+
+/* Añadir un estilo para el botón de navegación activo */
+.nav-button.active {
+  background-color: rgb(125, 46, 70);
+  border-color: rgb(212, 175, 55);
+  color: white;
+}
+
+/* Estilos para el programa oculto */
+.program-preview {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s ease-in-out;
+}
+
+.program-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to bottom, rgba(30, 30, 30, 0) 0%, rgba(30, 30, 30, 0.8) 50%, rgba(30, 30, 30, 1) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 2rem;
+}
+
+/* Transición para mostrar el programa completo */
+.program-preview.full-program-visible .program-overlay {
+  display: none;
+}
+
+.full-program-visible {
+  max-height: none;
+}
+
+/* Estilos elegantes para botones y elementos */
+.btn {
+  @apply transition-all duration-300 font-light tracking-widest uppercase relative inline-block;
+  letter-spacing: 0.2em;
+}
+
+.btn-primary {
+  @apply text-white border border-burgundy hover:bg-transparent;
+  background-color: rgba(125, 46, 70, 0.8);
+}
+
+.btn-primary:hover {
+  @apply border-gold;
+}
+
+.btn-secondary {
+  @apply bg-transparent text-white border border-white/30 hover:border-gold hover:text-gold;
+}
+
+.btn-gold {
+  @apply bg-transparent text-gold border border-gold/50 hover:border-gold;
+}
+
+.btn-gold:hover {
+  background-color: rgba(212, 175, 55, 0.1);
+}
+
+.card {
+  @apply bg-dark-gray overflow-hidden transition-all duration-500;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.card:hover {
+  border-color: rgba(212, 175, 55, 0.3);
+  transform: translateY(-5px);
+}
+
+.section-title {
+  @apply text-3xl md:text-4xl font-league-spartan font-light mb-16 text-center tracking-widest uppercase;
+  letter-spacing: 0.2em;
+}
+
+.section-title::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 1px;
+  background-color: rgb(212, 175, 55);
+  margin: 20px auto 0;
+}
+
+.input-elegant {
+  @apply bg-transparent text-white border border-white/20 focus:border-gold focus:outline-none transition-all duration-300;
+}
+
+/* Añadir al final del archivo */
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out forwards;
+}
