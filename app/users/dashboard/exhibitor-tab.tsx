@@ -156,10 +156,10 @@ export default function ExhibitorTab({ userId }: ExhibitorTabProps) {
       }
 
       console.log("Fetching data for user:", userId)
-      console.log("User role:", user.role, "User type:", user.userType)
+      // console.log("User role:", user.role, "User type:", user.userType)
 
       // Verificar si el usuario es un exhibitor según el role o userType
-      const isExhibitor = user.role === "exhibitor" || user.userType === "exhibitor"
+      const isExhibitor = user.role === "exhibitor" 
 
       if (!isExhibitor) {
         setWarning("Tu cuenta no tiene el rol de exhibitor. Contacta al administrador.")
@@ -232,7 +232,7 @@ export default function ExhibitorTab({ userId }: ExhibitorTabProps) {
               user: {
                 id: userId,
                 role: user.role,
-                userType: user.userType,
+                // userType: user.userType,
               },
               jwtPayload: jwtPayload,
               enabledEvents: enabledEvents,
@@ -340,7 +340,7 @@ export default function ExhibitorTab({ userId }: ExhibitorTabProps) {
               ? {
                   id: user._id || user.id,
                   role: user.role,
-                  userType: user.userType,
+                  // userType: user.userType,
                 }
               : "No user data",
             jwtPayload: jwtPayload,
@@ -1131,119 +1131,162 @@ export default function ExhibitorTab({ userId }: ExhibitorTabProps) {
           </div>
 
           {/* Stand options */}
-          {selectedEvent && (
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <h3 className="text-xl font-semibold text-gray-800">Opciones de Stand Disponibles</h3>
-                <span className="text-sm text-gray-500">
-                  {standOptions.length} {standOptions.length === 1 ? "opción" : "opciones"} disponibles
-                </span>
+{selectedEvent && (
+  <div className="space-y-6">
+    <div className="flex items-center justify-between">
+      <h3 className="text-xl font-semibold text-gray-800">Opciones de Stand Disponibles</h3>
+      <span className="text-sm text-gray-500">
+        {standOptions.length} {standOptions.length === 1 ? "opción" : "opciones"} disponibles
+      </span>
+    </div>
+
+    {/* Verificar si el evento seleccionado tiene configuración habilitada */}
+    {(() => {
+      const selectedEventData = events.find((e) => e._id === selectedEvent)
+      const isConfigEnabled =
+        selectedEventData?.isStandConfigEnabled === undefined ||
+        selectedEventData?.isStandConfigEnabled === true
+
+      if (!isConfigEnabled) {
+        return (
+          <div className="bg-red-50 border-l-4 border-red-500 p-5 rounded-md mb-6">
+            <div className="flex items-start">
+              <Lock className="h-6 w-6 text-red-500 mr-3 flex-shrink-0 mt-0.5" />
+              <div>
+                <h3 className="text-lg font-medium text-red-800">Configuración no habilitada</h3>
+                <p className="mt-2 text-red-700">
+                  No tienes permisos para configurar stands en este evento. Contacta al administrador para
+                  solicitar acceso.
+                </p>
               </div>
-
-              {/* Verificar si el evento seleccionado tiene configuración habilitada */}
-              {(() => {
-                const selectedEventData = events.find((e) => e._id === selectedEvent)
-                const isConfigEnabled =
-                  selectedEventData?.isStandConfigEnabled === undefined ||
-                  selectedEventData?.isStandConfigEnabled === true
-
-                if (!isConfigEnabled) {
-                  return (
-                    <div className="bg-red-50 border-l-4 border-red-500 p-5 rounded-md mb-6">
-                      <div className="flex items-start">
-                        <Lock className="h-6 w-6 text-red-500 mr-3 flex-shrink-0 mt-0.5" />
-                        <div>
-                          <h3 className="text-lg font-medium text-red-800">Configuración no habilitada</h3>
-                          <p className="mt-2 text-red-700">
-                            No tienes permisos para configurar stands en este evento. Contacta al administrador para
-                            solicitar acceso.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  )
-                }
-
-                return null
-              })()}
-
-              {standOptions.length === 0 ? (
-                <div className="bg-gray-50 border border-gray-200 p-6 rounded-md text-center">
-                  <p className="text-gray-600">No hay opciones de stand disponibles para este evento.</p>
-                </div>
-              ) : (
-                <div className="mb-8">
-                  {/* Configure all stand options button */}
-                  <div className="bg-burgundy/5 border border-burgundy/20 rounded-lg p-6 mb-6">
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                      <div>
-                        <h4 className="text-lg font-semibold text-gray-800 mb-1">Configuración completa de stand</h4>
-                        <p className="text-gray-600">
-                          Configura todas las opciones de stand para este evento en un solo proceso
-                        </p>
-                      </div>
-                      <button
-                        onClick={handleStartConfiguration}
-                        className="bg-burgundy hover:bg-burgundy/90 text-white px-6 py-3 rounded-md transition-colors flex items-center gap-2 whitespace-nowrap"
-                      >
-                        <ListChecks className="h-5 w-5" />
-                        <span>Configurar Todo</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Individual stand options */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {standOptions.map((option) => {
-                      // Check if user has already configured this option
-                      const existingConfig = standConfigs.find((config) => {
-                        const configOptionId =
-                          typeof config.standOption === "string" ? config.standOption : config.standOption?._id
-
-                        return configOptionId === option._id && config.event === selectedEvent
-                      })
-
-                      // Verificar si el evento seleccionado tiene configuración habilitada
-                      const selectedEventData = events.find((e) => e._id === selectedEvent)
-                      const isConfigEnabled =
-                        selectedEventData?.isStandConfigEnabled === undefined ||
-                        selectedEventData?.isStandConfigEnabled === true
-
-                      return (
-                        <div
-                          key={option._id}
-                          className="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
-                        >
-                          <div className="p-6">
-                            <div className="flex justify-between items-start mb-3">
-                              <h4 className="text-lg font-semibold text-gray-800">{option.title}</h4>
-                              {existingConfig && existingConfig.isSubmitted && (
-                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                  <Check className="h-3 w-3 mr-1" />
-                                  Configurado
-                                </span>
-                              )}
-                            </div>
-
-                            {option.description && (
-                              <p className="text-gray-600 mb-4 line-clamp-2">{option.description}</p>
-                            )}
-
-                            <div className="flex items-center text-sm text-gray-500 mb-5">
-                              <span className="inline-flex items-center mr-4">
-                                <Settings className="h-4 w-4 mr-1 text-gray-400" />
-                                {option.items?.length || 0} pasos
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
-              )}
             </div>
-          )}
+          </div>
+        )
+      }
+      return null
+    })()}
+
+    {standOptions.length === 0 ? (
+      <div className="bg-gray-50 border border-gray-200 p-6 rounded-md text-center">
+        <p className="text-gray-600">No hay opciones de stand disponibles para este evento.</p>
+      </div>
+    ) : (
+      <div className="mb-8">
+      {/* Configure all stand options button */}
+{(() => {
+    const selectedEventData = events.find((e) => e._id === selectedEvent);
+  const isConfigEnabled =
+    selectedEventData?.isStandConfigEnabled === undefined ||
+    selectedEventData?.isStandConfigEnabled === true;
+
+  // Revisar si todas las configuraciones del evento están pagadas y completadas
+  const eventConfigs = standConfigs.filter(
+    (config) => config.event === selectedEvent
+  );
+  const allPaidCompleted =
+    eventConfigs.length > 0 &&
+    eventConfigs.every(
+      (config) => config.isPaid === true && config.paymentStatus === "completed"
+    );
+
+  // Mostrar botón solo si está habilitado y NO todas las configuraciones están pagadas/completadas
+  if (isConfigEnabled && !allPaidCompleted) {
+    return (
+      <div className="bg-burgundy/5 border border-burgundy/20 rounded-lg p-6 mb-6">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h4 className="text-lg font-semibold text-gray-800 mb-1">Configuración completa de stand</h4>
+            <p className="text-gray-600">
+              Configura todas las opciones de stand para este evento en un solo proceso
+            </p>
+          </div>
+          <button
+            onClick={handleStartConfiguration}
+            className="bg-burgundy hover:bg-burgundy/90 text-white px-6 py-3 rounded-md transition-colors flex items-center gap-2 whitespace-nowrap"
+          >
+            <ListChecks className="h-5 w-5" />
+            <span>Configurar Todo</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+})()}
+
+
+        {/* Individual stand options */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {standOptions.map((option) => {
+            // Check if user has already configured this option
+            const existingConfig = standConfigs.find((config) => {
+              const configOptionId =
+                typeof config.standOption === "string" ? config.standOption : config.standOption?._id
+
+              return configOptionId === option._id && config.event === selectedEvent
+            })
+
+            // Verificar si el evento seleccionado tiene configuración habilitada
+            const selectedEventData = events.find((e) => e._id === selectedEvent)
+            const isConfigEnabled =
+              selectedEventData?.isStandConfigEnabled === undefined ||
+              selectedEventData?.isStandConfigEnabled === true
+            // Nueva condición: solo permitir configurar si NO está pagado y completado
+  const isPaidCompleted =
+    existingConfig?.isPaid === true && existingConfig?.paymentStatus === "completed";
+
+            return (
+              <div
+                key={option._id}
+                className="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="p-6">
+                  <div className="flex justify-between items-start mb-3">
+                    <h4 className="text-lg font-semibold text-gray-800">{option.title}</h4>
+                    {existingConfig && existingConfig.isSubmitted && (
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        <Check className="h-3 w-3 mr-1" />
+                        Configurado
+                      </span>
+                    )}
+                  </div>
+
+                  {option.description && (
+                    <p className="text-gray-600 mb-4 line-clamp-2">{option.description}</p>
+                  )}
+
+                  <div className="flex items-center text-sm text-gray-500 mb-5">
+                    <span className="inline-flex items-center mr-4">
+                      <Settings className="h-4 w-4 mr-1 text-gray-400" />
+                      {option.items?.length || 0} pasos
+                    </span>
+                  </div>
+                   {/* Botón de configurar solo si no está pagado y completado */}
+        {!isPaidCompleted && (
+          <button
+            onClick={() => handleStartConfiguration(/* puedes pasar option si lo necesitas */)}
+            className="bg-burgundy hover:bg-burgundy/90 text-white px-4 py-2 rounded-md mt-4"
+          >
+            Configurar Stand
+          </button>
+        )}
+        {/* Si está pagado y completado, muestra un mensaje */}
+        {isPaidCompleted && (
+          <span className="inline-block mt-4 text-green-700 font-semibold">
+            Pagado y completado
+          </span>
+        )}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    )}
+  </div>
+)}
+
 
           {/* Existing configurations */}
           {standConfigs.length > 0 && (
